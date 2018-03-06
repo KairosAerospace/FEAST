@@ -2,7 +2,6 @@ import os
 import numpy as np
 import pickle
 from scipy.ndimage.filters import gaussian_filter
-from kommons import KairosException
 import multiprocessing
 from multiprocessing import Pool
 from GeneralClassesFunctions.plotting_functions import time_series
@@ -80,8 +79,8 @@ def emission_prevented_over_null_map(params):
         survey_interval = res.tech_dict[key].survey_interval
     else:
         if inst_params_index != res.tech_dict[key].inst_params_index or \
-                        survey_interval_index != res.tech_dict[key].survey_interval_index:
-            raise KairosException("Sim results mixed up!")
+                survey_interval_index != res.tech_dict[key].survey_interval_index:
+            raise Exception("Sim results mixed up!")
 
     emission_prevented_over_null(key, res)
 
@@ -115,7 +114,7 @@ def get_point_emission_over_null(key, abspath):
             survey_interval = res.tech_dict[key].survey_interval
         else:
             if inst_params_index != res.tech_dict[key].inst_params_index or \
-                            survey_interval_index != res.tech_dict[key].survey_interval_index:
+                    survey_interval_index != res.tech_dict[key].survey_interval_index:
                 raise KairosException("Sim results mixed up!")
 
         emission_over_null.append(emission_prevented_over_null(key, res))
@@ -265,7 +264,7 @@ def sum_tiny_runs(top_dir, tech=TECH_NAME, force_rebuild=False):
                 total_sites.append(tr.site_count)
                 extreme_leaks.append(tr.extreme_leaks)
                 max_leaks.append(tr.max_leak)
-                total_leaks.append(tr.total_leaks) #summing over whatever random order you picked
+                total_leaks.append(tr.total_leaks)  # summing over whatever random order you picked
                 #  up the files in.
 
                 em_summary = {
@@ -326,8 +325,8 @@ def generate_true_leak_stats(plt, emission_dict_list, threshold=20):
                      np.sum(true_leak_list > threshold * mcfpd_to_gps) / len(true_leak_list)))
     msg = "Fraction of Leaks over {} Mscf/day per site per day: {}"
     print(msg.format(threshold, np.sum(true_leak_list > threshold * mcfpd_to_gps) / (
-        emission_dict_list[0]["site_count"] *
-        emission_dict_list[0]["sim_duration"])))
+            emission_dict_list[0]["site_count"] *
+            emission_dict_list[0]["sim_duration"])))
 
     plt.hist(true_leak_list / mcfpd_to_gps, bins=100);
     plt.gca().set_yscale("log")

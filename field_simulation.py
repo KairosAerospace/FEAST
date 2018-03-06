@@ -14,8 +14,6 @@ from GeneralClassesFunctions.simulation_classes import GasField
 
 from feast_constants import *
 
-# Note: this makes it hard to open-source
-import kommons
 import logging
 
 DETECTION_CLASSES = {
@@ -279,7 +277,6 @@ def field_simulation(gas_field=None, atm=None, input_leaks=None, dir_out="Result
     runID               a number to include in the filenames of the realization results
     """
 
-    kommons.logging.do_default_config(level=logging.WARNING)
 
     # -------------- Define settings --------------
     # time defines parameters related to time in the model. Time units are days.
